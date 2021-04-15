@@ -1,0 +1,16 @@
+{
+    "template": "https://github.com/timothycrosley/cookiecutter-python/",
+    "commit": "3958ca2ed0cad4d65c15912f6ab714720eb528a1",
+    "context": {
+        "cookiecutter": {
+            "full_name": "Timothy Crosley",
+            "email": "timothy.crosley@gmail.com",
+            "github_username": "timothycrosley",
+            "project_name": "mde",
+            "description": "CLI Markdown Editor",
+            "version": "0.0.1",
+            "_template": "https://github.com/timothycrosley/cookiecutter-python/"
+        }
+    },
+    "directory": null
+}
