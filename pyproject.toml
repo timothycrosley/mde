@@ -7,7 +7,9 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.1"
+rich = "^10.1.0"
+prompt-toolkit = "^3.0.18"
 
 [tool.poetry.dev-dependencies]
 vulture = "^1.0"
@@ -34,3 +36,6 @@ line-length = 100
 
 [tool.isort]
 profile = "hug"
+
+[tool.poetry.scripts]
+mde = "mde.cli:start"
