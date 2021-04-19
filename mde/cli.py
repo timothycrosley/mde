@@ -3,6 +3,7 @@ import builtins
 import dataclasses
 import os
 import pydoc
+from io import StringIO
 import sys
 import types
 from asyncio import Future, ensure_future
@@ -10,6 +11,8 @@ from datetime import datetime
 from functools import partial
 from pathlib import Path
 from typing import Optional
+from rich.markdown import Markdown
+from rich.console import Console
 
 import black
 import isort
@@ -286,7 +289,9 @@ def enter(event):
 
 
 def generate_preview(markdown: str):
-     preview.buffer.text = markdown
+    console = Console(file=StringIO())
+    console.print(Markdown(markdown))
+    preview.buffer.text = console.file.getvalue()
 
 
 @kb.add("c-s")
