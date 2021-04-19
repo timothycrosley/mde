@@ -282,22 +282,11 @@ def indent(event):
 def enter(event):
     buffer = event.app.current_buffer
     buffer.insert_text("\n")
-    if current_file and ".py" not in current_file.suffixes and ".pyi" not in current_file.suffixes:
-        return
+    generate_preview(buffer.text)
 
-    old_cursor_position = buffer.cursor_position
-    if old_cursor_position == 0:
-        return
 
-    end_position = buffer.text.rfind("\n", 0, old_cursor_position) + 1
-    code, rest = buffer.text[:end_position], buffer.text[end_position:]
-    if len(code) < 2 or (code[-1] == "\n" and code[-2] == "\n"):
-        return
-
-    formatted_code = format_code(code)
-    difference = len(formatted_code) - len(code)
-    buffer.text = formatted_code + rest
-    buffer.cursor_position = old_cursor_position + difference
+def generate_preview(markdown: str):
+     preview.buffer.text = markdown
 
 
 @kb.add("c-s")
