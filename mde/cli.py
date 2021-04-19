@@ -227,13 +227,13 @@ def save_as_file():
 
 
 def feedback(text):
-    immediate.buffer.text = text
+    preview.buffer.text = text
 
 
 def black_format_code(contents: str) -> str:
     """Formats the given import section using black."""
     try:
-        immediate.buffer.text = ""
+        preview.buffer.text = ""
         return black.format_file_contents(
             contents,
             fast=True,
@@ -244,7 +244,7 @@ def black_format_code(contents: str) -> str:
     except black.NothingChanged:
         return contents
     except Exception as error:
-        immediate.buffer.text = str(error)
+        preview.buffer.text = str(error)
         return contents
 
 
@@ -309,7 +309,7 @@ def save_file(event=None):
     buffer = app.current_buffer
     buffer.text = format_code(buffer.text)
     current_file.write_text(buffer.text, encoding="utf8")
-    immediate.buffer.text = f"Successfully saved {current_file}"
+    preview.buffer.text = f"Successfully saved {current_file}"
 
 
 async def _run_buffer(debug: bool = False):
@@ -470,7 +470,7 @@ class CodeFrame:
         return self.container
 
 
-class ImmediateFrame:
+class PreviewFrame:
     """
     Draw a border around any container, optionally with a title text.
     Changing the title and body of the frame is possible at runtime by
@@ -764,18 +764,22 @@ def built_in_functions():
 QLabel = partial(Label, dont_extend_width=True)
 SPACE = QLabel(" ")
 
-immediate = TextArea()
+preview = TextArea()
 root_container = MenuContainer(
     body=HSplit(
         [
-            open_file_frame,
-            search_toolbar,
-            ImmediateFrame(
-                immediate,
-                title="Immediate",
-                height=5,
-                style="fg:#AAAAAA bold",
-            ),
+            VSplit([
+                HSplit([
+                    open_file_frame,
+                    search_toolbar,
+                    ]),
+                PreviewFrame(
+                    preview,
+                    title="Preview",
+                    style="fg:#AAAAAA bold",
+                ),
+            ],
+                ),
             VSplit(
                 [
                     QLabel("<F1=Help>"),
