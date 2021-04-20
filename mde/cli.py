@@ -289,7 +289,8 @@ def enter(event):
 
 
 def generate_preview(markdown: str):
-    console = Console(file=StringIO())
+    print("sartsra: " + str(preview_frame.body.get_width()))
+    console = Console(file=StringIO(), width=preview_frame.container.get_width())
     console.print(Markdown(markdown))
     preview.buffer.text = console.file.getvalue()
 
@@ -759,6 +760,11 @@ QLabel = partial(Label, dont_extend_width=True)
 SPACE = QLabel(" ")
 
 preview = TextArea()
+preview_frame = PreviewFrame(
+                    preview,
+                    title="Preview",
+                    style="fg:#AAAAAA bold",
+                )
 root_container = MenuContainer(
     body=HSplit(
         [
@@ -767,11 +773,7 @@ root_container = MenuContainer(
                     open_file_frame,
                     search_toolbar,
                     ]),
-                PreviewFrame(
-                    preview,
-                    title="Preview",
-                    style="fg:#AAAAAA bold",
-                ),
+                preview_frame,
             ],
                 ),
             VSplit(
@@ -859,7 +861,7 @@ root_container = MenuContainer(
 
 
 layout = Layout(root_container)
-
+breakpoint()
 app: Application = Application(
     layout=layout,
     full_screen=True,
