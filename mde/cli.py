@@ -289,8 +289,7 @@ def enter(event):
 
 
 def generate_preview(markdown: str):
-    print("sartsra: " + str(preview_frame.body.get_width()))
-    console = Console(file=StringIO(), width=preview_frame.container.get_width())
+    console = Console(file=StringIO(), width=40)
     console.print(Markdown(markdown))
     preview.buffer.text = console.file.getvalue()
 
@@ -861,7 +860,6 @@ root_container = MenuContainer(
 
 
 layout = Layout(root_container)
-breakpoint()
 app: Application = Application(
     layout=layout,
     full_screen=True,
