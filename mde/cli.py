@@ -19,8 +19,9 @@ import isort
 from prompt_toolkit import Application
 from prompt_toolkit.completion import PathCompleter
 from prompt_toolkit.filters import Condition
-from prompt_toolkit.formatted_text import AnyFormattedText, Template
+from prompt_toolkit.formatted_text import AnyFormattedText, Template, ANSI
 from prompt_toolkit.key_binding.key_bindings import KeyBindings
+from prompt_toolkit.layout import FormattedTextControl
 from prompt_toolkit.layout.containers import (
     AnyContainer,
     ConditionalContainer,
@@ -54,21 +55,21 @@ current_file: Optional[Path] = None
 code_frame_style = Style.from_dict({"frame.label": "bg:#AAAAAA fg:#0000aa"})
 style = Style.from_dict(
     {
-        "menu-bar": "bg:#aaaaaa black bold",
-        "menu-bar.selected-item": "bg:black #aaaaaa bold",
-        "menu": "bg:#aaaaaa black bold",
-        "menu.border shadow": "black",
-        "shadow": "bg:black",
-        "dialog": "bg:#0000AA",
-        "frame.label": "fg:#AAAAAA bold",
-        "dialog frame.label": "fg:black bold bg:#AAAAAA",
-        "code-frame frame.label": "bg:#AAAAAA fg:#0000aa",
-        "dialog.body": "bg:#AAAAAA fg:#000000",
-        "dialog shadow": "bg:#000000",
-        "scrollbar.background": "bg:#AAAAAA",
-        "scrollbar.button": "bg:black fg:black",
-        "scrollbar.arrow": "bg:#AAAAAA fg:black bold",
-        "": "bg:#0000AA fg:#AAAAAA bold",
+        #"menu-bar": "bg:#aaaaaa black bold",
+        #"menu-bar.selected-item": "bg:black #aaaaaa bold",
+        #"menu": "bg:#aaaaaa black bold",
+        #"menu.border shadow": "black",
+        #"shadow": "bg:black",
+        #"dialog": "bg:#0000AA",
+        #"frame.label": "fg:#AAAAAA bold",
+        #"dialog frame.label": "fg:black bold bg:#AAAAAA",
+        #"code-frame frame.label": "bg:#AAAAAA fg:#0000aa",
+        #"dialog.body": "bg:#AAAAAA fg:#000000",
+        #"dialog shadow": "bg:#000000",
+        #"scrollbar.background": "bg:#AAAAAA",
+        #"scrollbar.button": "bg:black fg:black",
+        #"scrollbar.arrow": "bg:#AAAAAA fg:black bold",
+        #"": "bg:#0000AA fg:#AAAAAA bold",
     }
 )
 
@@ -289,9 +290,11 @@ def enter(event):
 
 
 def generate_preview(markdown: str):
-    console = Console(file=StringIO(), width=40)
-    console.print(Markdown(markdown))
-    preview.buffer.text = console.file.getvalue()
+    console = Console(width=40)
+    with console.capture() as capture:
+        console.print(Markdown(markdown))
+    preview.text = ANSI(capture.get())
+
 
 
 @kb.add("c-s")
@@ -758,7 +761,7 @@ def built_in_functions():
 QLabel = partial(Label, dont_extend_width=True)
 SPACE = QLabel(" ")
 
-preview = TextArea()
+preview = FormattedTextControl()
 preview_frame = PreviewFrame(
                     preview,
                     title="Preview",
@@ -772,7 +775,7 @@ root_container = MenuContainer(
                     open_file_frame,
                     search_toolbar,
                     ]),
-                preview_frame,
+                Window(preview),
             ],
                 ),
             VSplit(
@@ -864,7 +867,7 @@ app: Application = Application(
     layout=layout,
     full_screen=True,
     mouse_support=True,
-    style=style,
+    # style=style,
     enable_page_navigation_bindings=True,
     color_depth=ColorDepth.DEPTH_8_BIT,
 )
